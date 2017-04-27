@@ -22,9 +22,6 @@
 (global-set-key (kbd "C-x <left>") 'windmove-left)
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 
- ;; Themes
-;;(use-package kooten-theme)
-
  ;; Additional Packages
 (unless (package-installed-p 'aggressive-indent)
   (package-refresh-contents)
@@ -40,10 +37,10 @@
   (package-install 'with-editor))
 (use-package with-editor)
 
-(unless (package-installed-p 'web-completion-...)
-  (package-refresh-contents)
-  (package-install 'web-completion-...))
-(use-package web-completion-...)
+;;(unless (package-installed-p 'web-completion-...)
+;;  (package-refresh-contents)
+;;  (package-install 'web-completion-...))
+;;(use-package web-completion-...)
 
 (unless (package-installed-p 's)
   (package-refresh-contents)
@@ -120,20 +117,20 @@
   (package-install 'git))
 (use-package git)
 
-(unless (package-installed-p 'auto-package-up-...)
-  (package-refresh-contents)
-  (package-install 'auto-package-up-...))
-(use-package auto-package-up-...)
+;;(unless (package-installed-p 'auto-package-up-...)
+;;  (package-refresh-contents)
+;;  (package-install 'auto-package-up-...))
+;;(use-package auto-package-up-...)
 
-(unless (package-installed-p 'angular-snippets)
-  (package-refresh-contents)
-  (package-install 'angular-snippets))
-(use-package angular-snippets)
+;;(unless (package-installed-p 'angular-snippets)
+;;  (package-refresh-contents)
+;;  (package-install 'angular-snippets))
+;;(use-package angular-snippets)
 
-(unless (package-installed-p 'angular-mode)
-  (package-refresh-contents)
-  (package-install 'angular-mode))
-(use-package angular-mode)
+;;(unless (package-installed-p 'angular-mode)
+;;  (package-refresh-contents)
+;;  (package-install 'angular-mode))
+;;(use-package angular-mode)
 
 (unless (package-installed-p 'ac-html-csswatcher)
   (package-refresh-contents)
@@ -150,10 +147,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (diffview use-package))))
+ '(package-selected-packages (quote (irony diffview use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; C++ Auto completion
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
