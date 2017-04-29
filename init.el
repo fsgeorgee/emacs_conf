@@ -16,6 +16,22 @@
 (require 'bind-key)
 ;; ======== Customization starts ========
 
+;; Enable mouse support
+(unless window-system
+  (require 'mouse)
+  (xterm-mouse-mode t)
+  (global-set-key [mouse-4] (lambda ()
+                              (interactive)
+                              (scroll-down 1)))
+  (global-set-key [mouse-5] (lambda ()
+                              (interactive)
+                              (scroll-up 1)))
+  (defun track-mouse (e))
+  (setq mouse-sel-mode t)
+)
+ ;; Theme
+(load-theme 'badwolf t)
+
  ;; Key-bindings
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
@@ -117,6 +133,11 @@
   (package-install 'git))
 (use-package git)
 
+(unless (package-installed-p 'doremi)
+  (package-refresh-contents)
+  (package-install 'doremi))
+(use-package doremi)
+
 ;;(unless (package-installed-p 'auto-package-up-...)
 ;;  (package-refresh-contents)
 ;;  (package-install 'auto-package-up-...))
@@ -147,7 +168,39 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (irony diffview use-package))))
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   (vector "#eaeaea" "#d54e53" "DarkOliveGreen3" "#e7c547" "DeepSkyBlue1" "#c397d8" "#70c0b1" "#1c1c1c"))
+ '(custom-safe-themes
+   (quote
+    ("604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" "28ec8ccf6190f6a73812df9bc91df54ce1d6132f18b4c8fcc85d45298569eb53" "b51c2dda65e8e7e66ab1b06bc10b59e61c153b0cf928f296efab5a7574779fb6" default)))
+ '(fci-rule-color "#121212")
+ '(package-selected-packages
+   (quote
+    (doremi 0blayout badwolf-theme irony diffview use-package)))
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#d54e53")
+     (40 . "goldenrod")
+     (60 . "#e7c547")
+     (80 . "DarkOliveGreen3")
+     (100 . "#70c0b1")
+     (120 . "DeepSkyBlue1")
+     (140 . "#c397d8")
+     (160 . "#d54e53")
+     (180 . "goldenrod")
+     (200 . "#e7c547")
+     (220 . "DarkOliveGreen3")
+     (240 . "#70c0b1")
+     (260 . "DeepSkyBlue1")
+     (280 . "#c397d8")
+     (300 . "#d54e53")
+     (320 . "goldenrod")
+     (340 . "#e7c547")
+     (360 . "DarkOliveGreen3"))))
+ '(vc-annotate-very-old-color nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
