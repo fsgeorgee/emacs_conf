@@ -28,11 +28,13 @@
                               (scroll-up 1)))
   (defun track-mouse (e))
   (setq mouse-sel-mode t)
-)
- ;; Theme
-(load-theme 'badwolf t)
+  )
+;; Themes
+;;(load-theme 'badwolf t)
+;;(require 'solarized-theme)
 
- ;; Key-bindings
+
+;; Key-bindings
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
@@ -52,6 +54,14 @@
   (package-refresh-contents)
   (package-install 'with-editor))
 (use-package with-editor)
+
+(unless (package-installed-p 'sr-speedbar)
+  (package-refresh-contents)
+  (package-install 'sr-speedbar))
+(use-package sr-speedbar)
+(setq speedbar-show-unknown-files t) ; show all files
+(setq speedbar-use-images nil) ; use text for buttons
+(setq sr-speedbar-right-side nil) ; put on left side
 
 ;;(unless (package-installed-p 'web-completion-...)
 ;;  (package-refresh-contents)
@@ -163,6 +173,43 @@
   (package-install 'ac-html))
 (use-package ac-html)
 
+;; Markdown realtime preview using vmd
+(add-to-list 'load-path "~/.emacs.d/vmd-mode")
+(require 'vmd-mode)
+(require 'cl-lib)
+
+(unless (package-installed-p 'company)
+  (package-refresh-contents)
+  (package-install 'company))
+(require 'company)
+
+(unless (package-installed-p 'company-jedi)
+  (package-refresh-contents)
+  (package-install 'company-jedi))
+(require 'company-jedi)
+
+(defun my/python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+(add-hook 'python-mode-hook 'my/python-mode-hook)
+(add-to-list 'company-backends 'company-shell)
+(add-to-list 'company-backends 'company-shell-env)
+
+(defun vmd-company-backend (command &optional arg &rest ignored)
+  (interactive (list 'interactive))
+
+  (cl-case command
+    (interactive (company-begin-backend 'company-sample-backend))
+    (prefix (and (eq major-mode 'fundamental-mode)
+		 (company-grab-symbol)))
+    (candidates
+     (cl-remove-if-not
+      (lambda (c) (string-prefix-p arg c))
+      vmd-mode/github-emojis-list))))
+
+(add-to-list 'company-backends 'vmd-company-backend)
+
+(add-hook 'after-init-hook 'global-company-mode)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -176,9 +223,10 @@
    (quote
     ("604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" "28ec8ccf6190f6a73812df9bc91df54ce1d6132f18b4c8fcc85d45298569eb53" "b51c2dda65e8e7e66ab1b06bc10b59e61c153b0cf928f296efab5a7574779fb6" default)))
  '(fci-rule-color "#121212")
+ '(frame-background-mode (quote dark))
  '(package-selected-packages
    (quote
-    (doremi 0blayout badwolf-theme irony diffview use-package)))
+    (company-jedi company ac-html ac-html-csswatcher git html5-schema magit terraform-mode web-beautify web-mode auto-complete f git-commit hcl-mode magit-popup popup s with-editor aggressive-indent sr-speedbar doremi 0blayout irony diffview use-package)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
@@ -214,3 +262,9 @@
 (add-hook 'objc-mode-hook 'irony-mode)
 
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; Hooks
+
+(add-hook 'emacs-startup-hook (lambda () (sr-speedbar-open) ))
+(global-aggressive-indent-mode 1)
+(add-to-list 'aggressive-indent-excluded-modes 'html-mode)
